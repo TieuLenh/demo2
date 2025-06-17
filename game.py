@@ -1,5 +1,5 @@
 import pygame
-from demo21 import *
+from color import *
 from monster import *
 
 pygame.init()
@@ -55,6 +55,7 @@ while running:
       del_monster(monster_list,m)
   if len(monster_list) == 0:
     monster_list = set_monster(wd_w, wd_h, 10)
+
   pygame.display.update()
   clock.tick(fps)
 pygame.quit()

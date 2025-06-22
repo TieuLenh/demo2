@@ -6,6 +6,8 @@ pygame.init()
 unit = 30
 
 #display setting
+dts =  pygame.display.get_desktop_sizes()
+dt_w, dt_h = dts[0]
 wd_w, wd_h = 12 * unit, 20*unit
 screen = pygame.display.set_mode((wd_w, wd_h), flags=pygame.RESIZABLE)
 #surface
@@ -13,7 +15,16 @@ sf1 = pygame.Surface((wd_w, wd_h))
 #player
 pl1 = player(w=unit,h=unit)
 pl1r = pl1.plr()
-pl_step = 1
+print(pl1r)
+pl_step = 2
+
+#limited moving
+def lim1(plr,w,h):
+  if plr.x <= 0:
+    plr.x = 0
+  if plr.y <= 0:
+    plr.y = 0
+
 #game loop
 clock = pygame.time.Clock()
 fps = 90
@@ -24,12 +35,22 @@ while running:
   
   #processing surface
   screen.blit(sf1,(wd_w//2 - sf1.get_width()//2,0))
-  sf1.fill(green) 
+  #screen.blit(sf1,(0,0))
+  sf1.fill(white) 
   #processing event.
   for event in pygame.event.get():
       if event.type == pygame.QUIT:
           running = False
-  pl1r = player.moving(pl1)
+  key = pygame.key.get_pressed()
+  if key[pygame.K_w]:
+    pl1r.y -= pl_step
+  if key[pygame.K_s]:
+    pl1r.y += pl_step
+  if key[pygame.K_a]:
+    pl1r.x -= pl_step
+  if key[pygame.K_d]:
+    pl1r.x += pl_step
+  lim1(pl1r, wd_w, wd_h)
   pygame.draw.rect(surface=sf1, color=red, rect=pl1r)
   #setting fps and display
   pygame.display.update()

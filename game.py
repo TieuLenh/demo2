@@ -1,5 +1,5 @@
 import pygame
-from color import *
+from package.color import *
 from object_game import player
 
 pygame.init()

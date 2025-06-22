@@ -1,6 +1,6 @@
 import pygame
 from package.color import *
-from object_game import player
+from package.object_game import player
 
 pygame.init()
 unit = 30

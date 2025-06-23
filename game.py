@@ -1,6 +1,7 @@
 import pygame
 from package.color import *
 from package.object_game import player
+from package.actions import *
 
 pygame.init()
 unit = 30
@@ -10,69 +11,51 @@ dts =  pygame.display.get_desktop_sizes()
 dt_w, dt_h = dts[0]
 wd_w, wd_h = 20*unit, 12 * unit 
 screen = pygame.display.set_mode((wd_w, wd_h), flags=pygame.RESIZABLE)
+
 #surface
 sf1 = pygame.Surface((wd_w, wd_h))
+
 #player
-pl1 = player(w=unit,h=unit)
-pl1r = pl1.plr()
-print(pl1r)
+pl1 = player(x=0, y=wd_w - unit, w=unit,h=unit)
 pl_speed = 5
 
-#player's moving
-def lim1(plr,w,h):
-  if plr.x <= 0:
-    plr.x = 0
-  if plr.y <= 0:
-    plr.y = 0
-  if plr.x >= w - plr.w:
-    plr.x = w - plr.w
-  if plr.y >= h - plr.h:
-    plr.y = h - plr.h
 
 #game loop
 clock = pygame.time.Clock()
-fps = 90
-t = 0
-fos = t/fps
-jump = 0
-k = 0
+fps = 90 
+t = 0 # so giay chay chuong trinh
+fos = 0 # khung hinh thu fos + 1 cua 1 giay 
 running = True
 while running:
-  if wd_w != screen.get_width() or wd_h != screen.get_height():
-     wd_w, wd_h = pygame.display.get_window_size()
-  
-  #processing surface
-  screen.blit(sf1,(wd_w//2 - sf1.get_width()//2, wd_h//2 - sf1.get_height()//2,))
-  sf1.fill(white) 
-  #processing event.
-  for event in pygame.event.get():
-      if event.type == pygame.QUIT:
-          running = False
-      if event.type == pygame.KEYDOWN:
-        if event.key == pygame.K_SPACE and jump == 0 and k == 0:
-          jump = 1
-          k = fps/2
-  if fos % 2 == 0:
+    if wd_w != screen.get_width() or wd_h != screen.get_height():
+        wd_w, wd_h = pygame.display.get_window_size()
+
+    #processing surface
+    screen.blit(sf1,(wd_w//2 - sf1.get_width()//2, wd_h//2 - sf1.get_height()//2,))
+    sf1.fill(white) 
+
+    #processing event.
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                t0 = t
+                jumped = True
+    
+    if jumped:
+        pl1.jumping(10, t0, t, fos,fps)
+    #key pressing 
     key = pygame.key.get_pressed()
-    if jump == 1:
-      pl1r.y -= pl_speed
-      k -= 1
-    else:
-      pl1r.y += pl_speed
-    if k == 0:
-      jump = 0
-    if key[pygame.K_a]:
-      pl1r.x -= pl_speed
-    if key[pygame.K_d]:
-      pl1r.x += pl_speed
-  lim1(pl1r, sf1.get_width(), sf1.get_height())
-  pygame.draw.rect(surface=sf1, color=red, rect=pl1r)
-  #setting fps and display
-  pygame.display.update()
-  clock.tick(fps)
-  
-  t += 1000000000
-  if fos / fps >= 1:
-    fos = 0
+    pl1.moving(key=key, speed=pl_speed)
+    lim1(pl1, sf1.get_width(), sf1.get_height())
+    pygame.draw.rect(surface=sf1, color=black, rect=(pl1.x, pl1.y, pl1.w, pl1.h))
+
+    #setting fps and display
+    pygame.display.update()
+    clock.tick(fps)
     fos += 1
+    if fos / fps >= 1:
+        fos = 0
+        t += 1
 pygame.quit()

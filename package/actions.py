@@ -20,5 +20,13 @@ def lim1(pl,w,h):
         touched = True
     return touched
 
+def lim2(dan,w):
+    touched = False
+    if dan[0] <= 0:
+        touched = True
+    if dan[0] >= w :
+        touched = True
+    return touched
+
 
 

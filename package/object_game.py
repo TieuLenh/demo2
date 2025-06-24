@@ -15,12 +15,12 @@ class player(object):
         if key[dict_key['right']]:
             self.x += speed
             moved = True
-        if key[dict_key['up']]:
-            self.y -= speed
-            moved = True
-        if key[dict_key['down']]:
-            self.y += speed
-            moved = True 
+        # if key[dict_key['up']]:
+        #     self.y -= speed
+        #     moved = True
+        # if key[dict_key['down']]:
+        #     self.y += speed
+        #     moved = True 
         return moved
     
 

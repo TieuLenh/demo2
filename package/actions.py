@@ -15,8 +15,8 @@ def lim1(pl,w,h):
     if pl.x >= w - pl.w:
         pl.x = w - pl.w
         touched = True
-    if pl.y >= h - pl.h:
-        pl.y = h - pl.h
+    if pl.y >= h - 100:
+        pl.y = h - 100
         touched = True
     return touched
 
@@ -28,5 +28,8 @@ def lim2(dan,w):
         touched = True
     return touched
 
-
-
+def lim3(pl,h):
+    touched = False
+    if pl.y + pl.w >= h:
+        touched = True
+    return touched

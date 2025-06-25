@@ -34,15 +34,29 @@ d = 5 * pl_speed
 dict_key = {
     'left': pygame.K_a,
     'right': pygame.K_d,
-    'up': pygame.K_w,
+    'jump': pygame.K_w,
     'down': pygame.K_s,
-    'jump': pygame.K_SPACE,
     'reset': pygame.K_r,
     'fire': pygame.K_j
 }
+
 # jumping
 j0 = pl1.y
 jable = True
+
+# function
+# display showwing
+def draw_pl(sf,pl):
+    pygame.draw.line(sf, blue, (pl.x, pl.y - 6),(pl.x + pl.get_pcMp(), pl.y - 6), 4)
+    pygame.draw.line(sf, red, (pl.x, pl.y - 12),(pl.x + pl.get_pcHp(), pl.y - 12), 4)
+    sf1.blit(char, (pl.x, pl.y))
+    return None
+
+def get_sf_size(sf,w,h):
+    if w != sf.get_width() or h != sf.get_height():
+        w, h = sf.get_width(), sf.get_height()
+    return w, h
+
 
 #game loop
 clock = pygame.time.Clock()
@@ -104,19 +118,17 @@ while running:
 
     # 2. display
     # 2.1 updating window's size 
-    if wd_w != screen.get_width() or wd_h != screen.get_height():
-        wd_w, wd_h = pygame.display.get_window_size() 
+    wd_w, wd_h = get_sf_size(screen, wd_w, wd_h)
+
     screen.blit(sf1,(wd_w//2 - sf1.get_width()//2, wd_h//2 - sf1.get_height()//2,))
     sf1.fill(white)
 
     
     # 2.2 drawing object
     #pygame.draw.rect(sf1, black, (pl1.x, pl1.y, pl1.w, pl1.h))
-    pygame.draw.circle(sf1, green, (sf1.get_width()/2, sf1.get_height()/2), 100, 5)
-    pygame.draw.line(sf1, blue, (pl1.x, pl1.y - 6),(pl1.x + perc_mp, pl1.y - 6), 4)
-    pygame.draw.line(sf1, red, (pl1.x, pl1.y - 12),(pl1.x + perc_hp, pl1.y - 12), 4)
+    
     pygame.draw.line(sf1, black, (0,sf1.get_height() - 50), (sf1.get_width(),sf1.get_height() - 50), 2)
-    sf1.blit(char, (pl1.x, pl1.y))
+    draw_pl(sf1, pl1)
     for dg in gun:
         pygame.draw.circle(sf1, red, (dg[0], dg[1]), 5)
         dg[0] += dg[2]

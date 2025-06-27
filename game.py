@@ -26,15 +26,14 @@ max_hp = 100
 max_mp = 100
 
 # gun
-gun = []
-gun_x = pl1.w
+
 d = 5 * pl_speed
 
 #key
 dict_key = {
     'left': pygame.K_a,
     'right': pygame.K_d,
-    'jump': pygame.K_w,
+    'jump': pygame.K_k,
     'down': pygame.K_s,
     'reset': pygame.K_r,
     'fire': pygame.K_j
@@ -46,11 +45,7 @@ jable = True
 
 # function
 # display showwing
-def draw_pl(sf,pl):
-    pygame.draw.line(sf, blue, (pl.x, pl.y - 6),(pl.x + pl.get_pcMp(), pl.y - 6), 4)
-    pygame.draw.line(sf, red, (pl.x, pl.y - 12),(pl.x + pl.get_pcHp(), pl.y - 12), 4)
-    sf1.blit(char, (pl.x, pl.y))
-    return None
+
 
 def get_sf_size(sf,w,h):
     if w != sf.get_width() or h != sf.get_height():
@@ -75,10 +70,8 @@ while running:
                 j0 = pl1.y
                 jumped = True
                 jable = False
-            if event.key == dict_key['reset']:
-                pl1 = player(x= wd_w/2 - unit/2, y= wd_h/2 - unit/2, w=unit,h=unit, hp = 100, mp = 100)
             if event.key == dict_key['fire']:
-                gun.append([pl1.x + gun_x, pl1.y + unit/2, d])
+                pl1.append_bullet(d)
                 if d > 0:
                     pl1.x -= 5
                 else:
@@ -95,18 +88,14 @@ while running:
         pl1.mp -= 0.05
         if key[dict_key['left']]:
             char = turnleft
-            gun_x = 0
             d = -5 * pl_speed
         if key[dict_key['right']]:
             char = turnRigh
-            gun_x = pl1.w
             d = 5 * pl_speed
 
     lim1(pl1, sf1.get_width(), sf1.get_height())
     # 1.3 del bullet
-    for bullet in range(len(gun)-1,-1,-1):
-        if lim2(gun[bullet],wd_w):
-            del(gun[bullet])
+    
     # 1.4 
     perc_hp, perc_mp = pl1.w * (pl1.hp/max_hp), pl1.w * (pl1.mp/max_mp)
     if moved == False and pl1.mp/max_mp < 1 :
@@ -128,10 +117,10 @@ while running:
     #pygame.draw.rect(sf1, black, (pl1.x, pl1.y, pl1.w, pl1.h))
     
     pygame.draw.line(sf1, black, (0,sf1.get_height() - 50), (sf1.get_width(),sf1.get_height() - 50), 2)
-    draw_pl(sf1, pl1)
-    for dg in gun:
-        pygame.draw.circle(sf1, red, (dg[0], dg[1]), 5)
-        dg[0] += dg[2]
+    draw_pl(sf1, pl1, char)
+    for dg in pl1.bulletLi:
+        pygame.draw.circle(sf1, red, (dg.x, dg.y), 5)
+        dg.x += dg.d
     # 3. setting fps
     if pl1.y <= j0 - 100:
         jumped = False
@@ -140,6 +129,7 @@ while running:
     pl1.y += pl_speed 
     if lim3(pl1,wd_h - 50):
         jable = True
+    del_bullet(pl1,sf1.get_width())
     pygame.display.update()
     clock.tick(fps)
     fos += 1
@@ -147,4 +137,4 @@ while running:
         fos = 0
         t += 1
 pygame.quit()
-print(gun)
+print(pl1.bulletLi)

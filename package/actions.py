@@ -6,10 +6,10 @@ jumped = False
 moved = False
 hurted = False
 
-def draw_pl(sf, pl, char):
+def draw_pl(sf, pl):
     pygame.draw.line(sf, blue, (pl.x, pl.y - 6),(pl.x + pl.get_pcMp(), pl.y - 6), 4)
     pygame.draw.line(sf, red, (pl.x, pl.y - 12),(pl.x + pl.get_pcHp(), pl.y - 12), 4)
-    sf.blit(char, (pl.x, pl.y))
+    sf.blit(pl.char, (pl.x, pl.y))
     return None
 
 def lim1(pl,w,h):
@@ -47,3 +47,15 @@ def del_bullet(pl,w):
         if lim2(pl.bulletLi[i],w):
             del pl.bulletLi[i]
     return None
+
+def draw_bullet(sf,pl):
+    for dg in pl.bulletLi:
+        pygame.draw.circle(sf, red, (dg.x, dg.y), 5)
+        dg.x += dg.d
+    return None
+
+def get_sf_size(sf,w,h):
+    if w != sf.get_width() or h != sf.get_height():
+        w, h = sf.get_width(), sf.get_height()
+        changed = True
+    return w, h

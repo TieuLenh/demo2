@@ -14,16 +14,17 @@ screen = pygame.display.set_mode((wd_w, wd_h), flags=pygame.RESIZABLE)
 pygame.display.set_caption('pygameDemo')
 
 #surface
-sf1 = pygame.Surface((wd_w, wd_h))
+sf1 = pygame.Surface((1000,1000))
 #
 turnRigh = pygame.transform.scale(pygame.image.load('character.png'),(unit, unit))
 turnleft = pygame.transform.flip(turnRigh, True, False)
-char = turnRigh
+
+
 #player
 pl1 = player(x= wd_w/2 - unit/2, y= wd_h/2 - unit/2, w=unit,h=unit, hp = 100, mp = 100)
+pl1.char = turnleft
 pl_speed = 5
-max_hp = 100
-max_mp = 100
+
 
 # gun
 
@@ -47,10 +48,7 @@ jable = True
 # display showwing
 
 
-def get_sf_size(sf,w,h):
-    if w != sf.get_width() or h != sf.get_height():
-        w, h = sf.get_width(), sf.get_height()
-    return w, h
+
 
 
 #game loop
@@ -72,10 +70,6 @@ while running:
                 jable = False
             if event.key == dict_key['fire']:
                 pl1.append_bullet(d)
-                if d > 0:
-                    pl1.x -= 5
-                else:
-                    pl1.x += 5 
     # 1.2 processing pressing key  
     key = pygame.key.get_pressed()
 
@@ -87,20 +81,19 @@ while running:
         moved = True
         pl1.mp -= 0.05
         if key[dict_key['left']]:
-            char = turnleft
+            pl1.char = turnleft
             d = -5 * pl_speed
         if key[dict_key['right']]:
-            char = turnRigh
+            pl1.char = turnRigh
             d = 5 * pl_speed
 
     lim1(pl1, sf1.get_width(), sf1.get_height())
     # 1.3 del bullet
     
     # 1.4 
-    perc_hp, perc_mp = pl1.w * (pl1.hp/max_hp), pl1.w * (pl1.mp/max_mp)
-    if moved == False and pl1.mp/max_mp < 1 :
+    if moved == False and pl1.mp/pl1.max_mp < 1 :
         pl1.mp += 0.1
-    if hurted == False and pl1.hp/max_hp < 1:
+    if hurted == False and pl1.hp/pl1.max_hp < 1:
         pl1.hp += 1
     moved = False
     hurted = False
@@ -108,28 +101,26 @@ while running:
     # 2. display
     # 2.1 updating window's size 
     wd_w, wd_h = get_sf_size(screen, wd_w, wd_h)
-
-    screen.blit(sf1,(wd_w//2 - sf1.get_width()//2, wd_h//2 - sf1.get_height()//2,))
+    screen.blit(sf1, (0, wd_h - sf1.get_height()))
     sf1.fill(white)
 
     
-    # 2.2 drawing object
-    #pygame.draw.rect(sf1, black, (pl1.x, pl1.y, pl1.w, pl1.h))
     
     pygame.draw.line(sf1, black, (0,sf1.get_height() - 50), (sf1.get_width(),sf1.get_height() - 50), 2)
-    draw_pl(sf1, pl1, char)
-    for dg in pl1.bulletLi:
-        pygame.draw.circle(sf1, red, (dg.x, dg.y), 5)
-        dg.x += dg.d
-    # 3. setting fps
+    draw_pl(sf1, pl1)
+    draw_bullet(sf1,pl1)
+
+
     if pl1.y <= j0 - 100:
         jumped = False
     if jumped == True and pl1.y > j0 - 100:
         pl1.y -= 2 * pl_speed
-    pl1.y += pl_speed 
-    if lim3(pl1,wd_h - 50):
+    pl1.y += pl_speed
+    if lim3(pl1, wd_h - 50):
         jable = True
+
     del_bullet(pl1,sf1.get_width())
+
     pygame.display.update()
     clock.tick(fps)
     fos += 1

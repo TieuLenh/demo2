@@ -1,3 +1,4 @@
+from math import fabs
 class bullet:
     def __init__(self, x = 0, y = 0, d = 0, damage = 0):
         self.x = x
@@ -7,15 +8,16 @@ class bullet:
 
 
 class player:
-    def __init__(self, x = 0, y = 0, w = 0, mhp = 100, mmp= 100, h = 0, hp = 0, mp = 0, bulletLi = None):
+    def __init__(self, x = 0, y = 0, w = 0, m_hp = 100, m_mp= 100, h = 0, hp = 0, mp = 0, char = None, bulletLi = None):
         self.x = x
         self.y = y
         self.w = w
         self.h = h
-        self.max_hp = mhp
-        self.max_mp = mmp
+        self.max_hp = m_hp
+        self.max_mp = m_mp
         self.hp = hp
         self.mp = mp
+        self.char = char
         self.bulletLi = bulletLi if bulletLi is not None else []
     
     def get_pcHp(self):
@@ -42,6 +44,7 @@ class player:
     
     def append_bullet(self,d = 1):
         self.bulletLi.append(bullet(self.x + self.w//2, self.y + self.h//2, d))
+        self.x -= 5 * d//fabs(d)
         return None
     
     

@@ -1,7 +1,4 @@
-import pygame
-from package.color import *
-from package.object_game import player
-from package.actions import *
+from package.main import *
 
 pygame.init()
 unit = 50
@@ -22,7 +19,7 @@ turnleft = pygame.transform.flip(turnRigh, True, False)
 
 #player
 pl1 = player(x= wd_w/2 - unit/2, y= wd_h/2 - unit/2, w=unit,h=unit, hp = 100, mp = 100)
-pl1.char = turnleft
+pl1.char = turnRigh
 pl_speed = 5
 
 

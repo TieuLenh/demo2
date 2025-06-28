@@ -59,3 +59,4 @@ def get_sf_size(sf,w,h):
         w, h = sf.get_width(), sf.get_height()
         changed = True
     return w, h
+

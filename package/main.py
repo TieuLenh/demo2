@@ -6,13 +6,24 @@ jumped = False
 moved = False
 hurted = False
 
-def draw_pl(sf, pl):
-    pygame.draw.line(sf, blue, (pl.x, pl.y - 6),(pl.x + pl.get_pcMp(), pl.y - 6), 4)
-    pygame.draw.line(sf, red, (pl.x, pl.y - 12),(pl.x + pl.get_pcHp(), pl.y - 12), 4)
-    sf.blit(pl.char, (pl.x, pl.y))
-    return None
+def get_sf_size(sf = None, view_point = None, w = 0, h = 0):
+    if w != sf.get_width() or h != sf.get_height():
+        w, h =  sf.get_width(), sf.get_height()
+        view_point = pygame.Surface((w, h))
+    return w, h, view_point
 
-def lim1(pl,w,h):
+def draw(self, sf = None):
+    pygame.draw.line(sf, blue, (self.x, self.y - 6),(self.x + self.get_pcMp(), self.y - 6), 4)
+    pygame.draw.line(sf, red, (self.x, self.y - 12),(self.x + self.get_pcHp(), self.y - 12), 4)
+    sf.blit(self.char, (self.x, self.y))
+    return None
+player.draw = draw
+
+def rect(self):
+    return pygame.Rect(self.x, self.y, self.w, self.h)
+player.rect = rect
+
+def lim_view(pl, w = 0, h = 0):
     touched = False
     if pl.x <= 0:
         pl.x = 0
@@ -23,12 +34,12 @@ def lim1(pl,w,h):
     if pl.x >= w - pl.w:
         pl.x = w - pl.w
         touched = True
-    if pl.y >= h - 100:
-        pl.y = h - 100
+    if pl.y >= h - pl.h:
+        pl.y = h - pl.h
         touched = True
     return touched
 
-def lim2(dan,w):
+def lim2(dan, w = 0):
     touched = False
     if dan.x <= 0:
         touched = True
@@ -36,27 +47,27 @@ def lim2(dan,w):
         touched = True
     return touched
 
-def lim3(pl,h):
+def lim3(pl, h = 0):
     touched = False
     if pl.y + pl.w >= h:
         touched = True
     return touched
 
-def del_bullet(pl,w):
-    for i in range(len(pl.bulletLi)-1, -1, -1):
-        if lim2(pl.bulletLi[i],w):
-            del pl.bulletLi[i]
+def del_bullet(self, w = 0):
+    for i in range(len(self.bulletLi)-1, -1, -1):
+        if lim2(self.bulletLi[i],w):
+            del self.bulletLi[i]
     return None
+player.del_bullet = del_bullet
 
-def draw_bullet(sf,pl):
-    for dg in pl.bulletLi:
-        pygame.draw.circle(sf, red, (dg.x, dg.y), 5)
-        dg.x += dg.d
+def draw_bullet(self, sf = None):
+    for bul in self.bulletLi:
+        pygame.draw.circle(sf, red, (bul.x, bul.y), 2)
+        bul.x += bul.d
     return None
+player.draw_bullet = draw_bullet
 
-def get_sf_size(sf,w,h):
-    if w != sf.get_width() or h != sf.get_height():
-        w, h = sf.get_width(), sf.get_height()
-        changed = True
-    return w, h
+def pl_jump(pl, key, key_dict):
+    jumped, limH, current_h = pl.jumping(key, key_dict, )
+    pass
 

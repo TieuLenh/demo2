@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((wd_w, wd_h), flags=pygame.RESIZABLE)
 pygame.display.set_caption('pygameDemo')
 
 #surface
-sf1 = pygame.Surface((1000,1000))
+view_point = pygame.Surface((wd_w,wd_h))
 #
 turnRigh = pygame.transform.scale(pygame.image.load('character.png'),(unit, unit))
 turnleft = pygame.transform.flip(turnRigh, True, False)
@@ -38,7 +38,7 @@ dict_key = {
 }
 
 # jumping
-j0 = pl1.y
+j0 = wd_h
 jable = True
 
 # function
@@ -84,7 +84,7 @@ while running:
             pl1.char = turnRigh
             d = 5 * pl_speed
 
-    lim1(pl1, sf1.get_width(), sf1.get_height())
+    lim_view(pl1, view_point.get_width(), view_point.get_height())
     # 1.3 del bullet
     
     # 1.4 
@@ -97,26 +97,23 @@ while running:
 
     # 2. display
     # 2.1 updating window's size 
-    wd_w, wd_h = get_sf_size(screen, wd_w, wd_h)
-    screen.blit(sf1, (0, wd_h - sf1.get_height()))
-    sf1.fill(white)
+    wd_w, wd_h, view_point = get_sf_size(screen, view_point, wd_w, wd_h)
 
+    screen.blit(view_point, (0, 0))
+    view_point.fill(white)
     
-    
-    pygame.draw.line(sf1, black, (0,sf1.get_height() - 50), (sf1.get_width(),sf1.get_height() - 50), 2)
-    draw_pl(sf1, pl1)
-    draw_bullet(sf1,pl1)
-
+    pl1.draw(view_point)
+    pl1.draw_bullet(view_point)
+    pl1.del_bullet(view_point.get_width())
 
     if pl1.y <= j0 - 100:
         jumped = False
     if jumped == True and pl1.y > j0 - 100:
         pl1.y -= 2 * pl_speed
     pl1.y += pl_speed
-    if lim3(pl1, wd_h - 50):
-        jable = True
 
-    del_bullet(pl1,sf1.get_width())
+    if lim3(pl1, view_point.get_height() - 50):
+        jable = True
 
     pygame.display.update()
     clock.tick(fps)
@@ -126,3 +123,4 @@ while running:
         t += 1
 pygame.quit()
 print(pl1.bulletLi)
+

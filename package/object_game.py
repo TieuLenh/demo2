@@ -26,7 +26,7 @@ class player:
     def get_pcMp(self):
         return self.w * (self.mp/self.max_mp)
     
-    def moving(self, key, dict_key, speed=0):
+    def moving(self, key = None, dict_key = None, speed=0):
         moved = False
         if key[dict_key['left']]:
             self.x -= speed
@@ -42,8 +42,15 @@ class player:
         #     moved = True 
         return moved
     
+    def jumping(self, key = None, dict_key = None, limH = 0, current_h = 0, speed = 0):
+        jumed = True
+        current_h += speed
+        if current_h >= limH:
+            jumed = False
+        return jumed, limH, current_h
+
     def append_bullet(self,d = 1):
-        self.bulletLi.append(bullet(self.x + self.w//2, self.y + self.h//2, d))
+        self.bulletLi.append(bullet(self.x + self.w//2, self.y + self.h//2 - 4, d))
         self.x -= 5 * d//fabs(d)
         return None
     

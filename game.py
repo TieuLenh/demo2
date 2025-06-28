@@ -34,7 +34,9 @@ dict_key = {
     'jump': pygame.K_k,
     'down': pygame.K_s,
     'reset': pygame.K_r,
-    'fire': pygame.K_j
+    'fire': pygame.K_j,
+    'heal_hp': pygame.K_u,
+    'heal_mp': pygame.K_i
 }
 
 # jumping
@@ -55,8 +57,8 @@ t = 0 # so giay chay chuong trinh
 fos = 0 # khung hinh thu fos + 1 cua 1 giay 
 running = True
 while running:
-    # 1. processing all alrithemtic
-    # 1.1 processing event.
+
+    wd_w, wd_h, view_point = get_sf_size(screen, view_point, wd_w, wd_h)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -67,13 +69,11 @@ while running:
                 jable = False
             if event.key == dict_key['fire']:
                 pl1.append_bullet(d)
+            pl1.healing(event.key, dict_key)
+    
     # 1.2 processing pressing key  
     key = pygame.key.get_pressed()
 
-    if pl1.mp <= 0:
-        pl1.mp = 0
-    if pl1.hp <= 0:
-        pl1 = player()
     if pl1.moving(key=key, dict_key=dict_key, speed=pl_speed):
         moved = True
         pl1.mp -= 0.05
@@ -85,23 +85,17 @@ while running:
             d = 5 * pl_speed
 
     lim_view(pl1, view_point.get_width(), view_point.get_height())
-    # 1.3 del bullet
     
-    # 1.4 
-    if moved == False and pl1.mp/pl1.max_mp < 1 :
-        pl1.mp += 0.1
-    if hurted == False and pl1.hp/pl1.max_hp < 1:
-        pl1.hp += 1
     moved = False
-    hurted = False
+
 
     # 2. display
     # 2.1 updating window's size 
-    wd_w, wd_h, view_point = get_sf_size(screen, view_point, wd_w, wd_h)
+    
 
     screen.blit(view_point, (0, 0))
     view_point.fill(white)
-    
+
     pl1.draw(view_point)
     pl1.draw_bullet(view_point)
     pl1.del_bullet(view_point.get_width())

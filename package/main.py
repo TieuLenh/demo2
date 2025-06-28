@@ -2,6 +2,8 @@ import pygame
 from package.object_game import *
 from package.color import *
 
+
+
 jumped = False
 moved = False
 hurted = False
@@ -13,8 +15,11 @@ def get_sf_size(sf = None, view_point = None, w = 0, h = 0):
     return w, h, view_point
 
 def draw(self, sf = None):
-    pygame.draw.line(sf, blue, (self.x, self.y - 6),(self.x + self.get_pcMp(), self.y - 6), 4)
-    pygame.draw.line(sf, red, (self.x, self.y - 12),(self.x + self.get_pcHp(), self.y - 12), 4)
+    
+    if self.mp > 0:
+        pygame.draw.line(sf, blue, (self.x, self.y - 6),(self.x + self.get_pcMp(), self.y - 6), 4)
+    if self.hp > 0:
+        pygame.draw.line(sf, red, (self.x, self.y - 12),(self.x + self.get_pcHp(), self.y - 12), 4)
     sf.blit(self.char, (self.x, self.y))
     return None
 player.draw = draw
@@ -41,7 +46,7 @@ def lim_view(pl, w = 0, h = 0):
 
 def lim2(dan, w = 0):
     touched = False
-    if dan.x <= 0:
+    if dan.x <= -w:
         touched = True
     if dan.x >= w :
         touched = True
@@ -55,7 +60,7 @@ def lim3(pl, h = 0):
 
 def del_bullet(self, w = 0):
     for i in range(len(self.bulletLi)-1, -1, -1):
-        if lim2(self.bulletLi[i],w):
+        if lim2(self.bulletLi[i], self.x + w):
             del self.bulletLi[i]
     return None
 player.del_bullet = del_bullet
@@ -70,4 +75,5 @@ player.draw_bullet = draw_bullet
 def pl_jump(pl, key, key_dict):
     jumped, limH, current_h = pl.jumping(key, key_dict, )
     pass
+
 

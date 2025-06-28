@@ -15,8 +15,8 @@ class player:
         self.h = h
         self.max_hp = m_hp
         self.max_mp = m_mp
-        self.hp = hp
-        self.mp = mp
+        self.hp = hp if hp <= m_hp else m_hp
+        self.mp = mp if hp <= m_mp else m_mp
         self.char = char
         self.bulletLi = bulletLi if bulletLi is not None else []
     
@@ -54,5 +54,24 @@ class player:
         self.x -= 5 * d//fabs(d)
         return None
     
+    def standard(self):
+        if self.hp > self.max_hp:
+            self.hp = self.max_hp
+        if self.mp > self.max_mp:
+            self.mp = self.max_mp
+        if self.mp <= 0:
+            self.mp = 0
+        if self.hp <= 0:
+            self = 0
+        return None
+
+    def healing(self, key = None, dict_key = None, hhp = 25, hmp = 25):
+        if key == dict_key['heal_hp']:
+            self.hp += hhp    
+        if key == dict_key['heal_mp']:
+            self.mp += hmp
+        self.standard()
+        return None
+            
     
     

@@ -62,16 +62,47 @@ class player:
         if self.mp <= 0:
             self.mp = 0
         if self.hp <= 0:
-            self = 0
+            self.hp = 0
         return None
 
     def healing(self, key = None, dict_key = None, hhp = 25, hmp = 25):
+        healed = False
         if key == dict_key['heal_hp']:
-            self.hp += hhp    
+            self.hp += hhp
+            healed = True    
         if key == dict_key['heal_mp']:
             self.mp += hmp
+            healed = True
         self.standard()
+        return healed
+
+    def attribute(self):
+        att = {
+
+        }
+        return att            
+
+
+
+class game_data:
+    def __init__(self, data = None):
+        self.data = data
+    
+    def save_data(self, file = 'data.txt'):
+        f = open(file, mode='w')
+        for k in self.data.keys():
+            f.write(k + ': ' + str(self.data[k]) + '\n')
+        f.close()
         return None
-            
     
-    
+    # def get_data(self, file = 'data.txt'):
+    #     f = open(file, mode='r')
+    #     dataIn = f.readlines()
+    #     dataOut = dict()
+    #     for i in range(len(dataIn)):
+    #         dataIn[i] = dataIn[i].split(': ')
+    #         dataIn[i][1] = int(dataIn[i][1].replace('\n', ''))
+    #     f.close()
+    #     for i in range(len(dataIn)):
+    #         dataOut[dataIn[i][0]] = dataIn[i][1]
+    #     return dataOut

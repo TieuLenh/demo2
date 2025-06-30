@@ -4,9 +4,9 @@ pygame.init()
 unit = 50
 
 #display setting
-dts =  pygame.display.get_desktop_sizes()
-dt_w, dt_h = dts[0]
-wd_w, wd_h = 20*unit, 12 * unit 
+
+wd_w, wd_h = 20*unit, 12 * unit
+wd_w, wd_h = data['wd_w'], data['wd_h']
 screen = pygame.display.set_mode((wd_w, wd_h), flags=pygame.RESIZABLE)
 pygame.display.set_caption('pygameDemo')
 
@@ -18,9 +18,10 @@ turnleft = pygame.transform.flip(turnRigh, True, False)
 
 
 #player
-pl1 = player(x= wd_w/2 - unit/2, y= wd_h/2 - unit/2, w=unit,h=unit, hp = 100, mp = 100)
+pl1 = player(x= wd_w//2 - unit//2, y= wd_h//2 - unit//2, w=unit, h=unit)
 pl1.char = turnRigh
 pl_speed = 5
+
 
 
 # gun
@@ -49,7 +50,6 @@ jable = True
 
 
 
-
 #game loop
 clock = pygame.time.Clock()
 fps = 90
@@ -69,14 +69,16 @@ while running:
                 jable = False
             if event.key == dict_key['fire']:
                 pl1.append_bullet(d)
-            pl1.healing(event.key, dict_key)
+            if pl1.healing(event.key, dict_key):
+                print(pl1.hp, pl1.mp)
     
-    # 1.2 processing pressing key  
+    # 1.2 processing pressing key
+ 
     key = pygame.key.get_pressed()
 
     if pl1.moving(key=key, dict_key=dict_key, speed=pl_speed):
         moved = True
-        pl1.mp -= 0.05
+        pl1.mp -= 1
         if key[dict_key['left']]:
             pl1.char = turnleft
             d = -5 * pl_speed
@@ -95,7 +97,7 @@ while running:
 
     screen.blit(view_point, (0, 0))
     view_point.fill(white)
-
+    draw_map(view_point, list_map)
     pl1.draw(view_point)
     pl1.draw_bullet(view_point)
     pl1.del_bullet(view_point.get_width())
@@ -115,6 +117,14 @@ while running:
     if fos / fps >= 1:
         fos = 0
         t += 1
-pygame.quit()
-print(pl1.bulletLi)
 
+
+data = {
+    'wd_w': int(wd_w),
+    'wd_h': int(wd_h),
+    'pl_x': int(pl1.x),
+    'pl_y': int(pl1.y)
+}
+save_data(data= data)
+pygame.quit()
+print(pl1.bulletLi) 
